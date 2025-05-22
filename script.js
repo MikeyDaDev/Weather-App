@@ -1,5 +1,7 @@
 document.getElementById('search').addEventListener('click', function () {
-    const city = document.getElementById('city').value;
+    const city = document.getElementById('city').value.trim();
+    const state = document.getElementById('state').value.trim();
+    const country = document.getElementById('country').value.trim();
     const apiKey = 'ce2814bc1a43af5e628dfbfdfe9a24e3'; // Replace with your OpenWeatherMap API key
     
     if (city === '') {
@@ -10,9 +12,14 @@ document.getElementById('search').addEventListener('click', function () {
     // Show a loading message
     document.getElementById('weatherResult').innerHTML = `<p>⏳ Please wait, weather is loading...</p>`;
 
+    // Build the location string such as the city, state, and country
+    let location = city;
+    if (state !== '') location += `,${state}`;
+    if (country !== '') location += `,${country}`;
+
 
     // Request weather in Farenheit units=imperial and celsius units=metric 
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=imperial`;
 
     fetch(url)
       .then(response => response.json())
@@ -39,13 +46,15 @@ document.getElementById('search').addEventListener('click', function () {
       .catch(error => {
         // Handle errors
         console.error('Error fetching weather data:', error);
-        document.getElementById('weatherResult').innerHTML = `<p>Could not determine the weather. Try a valid city please.</p>`;
+        document.getElementById('weatherResult').innerHTML = `<p>Could not determine the weather. Check for spelling please.</p>`;
       });
   });
   
   // This allows the "Enter" key to be used to search
-  document.getElementById('city').addEventListener('keyup', function (event) {
+  ['city', 'state', 'country'].forEach(id => {
+  document.getElementById(id).addEventListener('keyup', function (event) {
     if (event.key === 'Enter') {
       document.getElementById('search').click();
     }
-  });
+  });  
+});

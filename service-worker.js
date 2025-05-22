@@ -1,5 +1,5 @@
  // Name of the cache
-const CACHE_NAME = 'weather-app-cache-v1';
+const CACHE_NAME = 'weather-app-v1';
 
 // Files we want to cache (for offline use)
 const urlsToCache = [
@@ -16,7 +16,8 @@ const urlsToCache = [
 self.addEventListener('install', event => {
   // Wait until files are cached before finishing install
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
+    caches.open(CACHE_NAME)
+    .then(cache => {
         console.log('[Service Worker] Caching app shell');
       return cache.addAll(urlsToCache); // Save these files in the cache
     })
