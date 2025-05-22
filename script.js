@@ -7,7 +7,6 @@ function fetchWeatherByCoords(lat, lon) {
   resultEl.classList.remove('show');
   resultEl.innerHTML = `<p>📍 Detecting your weather...</p>`;
 
-  // Step 1: Get current weather
   fetch(weatherUrl)
     .then(response => response.json())
     .then(data => {
@@ -26,35 +25,34 @@ function fetchWeatherByCoords(lat, lon) {
       `;
 
       resultEl.innerHTML = weather;
+      resultEl.classList.add('show');
 
-      // Step 2: Fetch hourly forecast
       return fetch(oneCallUrl);
     })
-    .then(response => response.json())
-    .then(data => {
-      const hourlyContainer = resultEl.querySelector('.hourly-forecast');
+    .then(res => res.json())
+    .then(oneCallData => {
+      const hourlyContainer = document.querySelector('.hourly-forecast');
+      hourlyContainer.innerHTML = '';
 
-      data.hourly.slice(1, 6).forEach(hour => {
+      oneCallData.hourly.slice(1, 6).forEach(hour => {
         const date = new Date(hour.dt * 1000);
-        const hourStr = date.getHours() % 12 || 12;
+        const time = date.getHours() % 12 || 12;
         const ampm = date.getHours() >= 12 ? 'PM' : 'AM';
-        const iconUrl = `https://openweathermap.org/img/wn/${hour.weather[0].icon}.png`;
+        const icon = hour.weather[0].icon;
+        const iconUrl = `https://openweathermap.org/img/wn/${icon}.png`;
 
-        const hourHTML = `
-          <div class="hour">
-            <p>${hourStr} ${ampm}</p>
-            <img src="${iconUrl}" alt="" />
-            <p>${hour.temp}°F</p>
+        const hourBlock = `
+          <div class="hour-block">
+            <p>${time} ${ampm}</p>
+            <img src="${iconUrl}" alt="Weather icon"/>
+            <p>${Math.round(hour.temp)}°F</p>
           </div>
         `;
-
-        hourlyContainer.innerHTML += hourHTML;
+        hourlyContainer.innerHTML += hourBlock;
       });
-
-      resultEl.classList.add('show');
     })
     .catch(error => {
-      console.error('Error fetching weather:', error);
+      console.error('Error fetching weather data:', error);
       resultEl.innerHTML = `<p>Could not get weather data.</p>`;
     });
 }
@@ -83,9 +81,20 @@ document.getElementById('search').addEventListener('click', function () {
   fetch(url)
     .then(response => response.json())
     .then(data => {
-      const lat = data.coord.lat;
-      const lon = data.coord.lon;
-      fetchWeatherByCoords(lat, lon);
+      const icon = data.weather[0].icon;
+      const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+
+      const weather = `
+        <h2>${data.name}</h2>
+        <img src="${iconUrl}" alt="Weather icon"/>
+        <p>${data.weather[0].description}</p>
+        <p>🌡️ Temp: ${data.main.temp}°F</p>
+        <p>💧 Humidity: ${data.main.humidity}%</p>
+        <p>🌬️ Wind: ${data.wind.speed} mph</p>
+      `;
+
+      resultEl.innerHTML = weather;
+      resultEl.classList.add('show');
     })
     .catch(error => {
       console.error('Error fetching weather data:', error);
@@ -93,7 +102,7 @@ document.getElementById('search').addEventListener('click', function () {
     });
 });
 
-// Allow "Enter" key to trigger search
+// Allow Enter key to trigger search
 ['city', 'state', 'country'].forEach(id => {
   document.getElementById(id).addEventListener('keyup', function (event) {
     if (event.key === 'Enter') {
@@ -114,4 +123,13 @@ window.addEventListener('load', () => {
       }
     );
   }
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+        .catch(err => console.error('❌ Service Worker registration failed:', err));
+    });
+  }
+  
 });

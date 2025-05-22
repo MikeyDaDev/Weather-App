@@ -125,23 +125,23 @@ header p {
 
   .hourly-forecast {
     display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
+    justify-content: space-around;
     gap: 0.5rem;
-    flex-wrap: wrap;
+    margin-top: 1rem;
   }
   
-  .hour {
-    background-color: rgba(255, 255, 255, 0.2);
+  .hour-block {
+    background: rgba(255, 255, 255, 0.2);
     padding: 0.5rem;
     border-radius: 8px;
-    flex: 1;
-    min-width: 60px;
     text-align: center;
+    color: #fff;
+    width: 60px;
   }
   
-  .hour img {
+  .hour-block img {
     width: 40px;
     height: 40px;
-  } 
+  }
+  
 }
