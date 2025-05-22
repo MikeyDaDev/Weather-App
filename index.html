@@ -17,7 +17,7 @@
           
           <section class="input-section">
             <input type="text" id="city" placeholder="Enter city name (e.g. Springfield)" />
-            <input type="text" id="state" placeholder="Enter 2-letter state code (e.g. US)" maxlength="2" />
+            <input type="text" id="state" placeholder="Enter 2-letter state code (e.g. IL)" maxlength="2" />
             <input type="text" id="country" placeholder="Enter country code (e.g. US)" />
             <button id="search">Search</button>
           </section>
@@ -30,7 +30,7 @@
         <script>
           if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-              navigator.serviceWorker.register('service-worker.js')
+              navigator.serviceWorker.register('/sw.js')
                 .then(function (registration) {
                   console.log('✅ Service Worker registered with scope:', registration.scope);
                 })

@@ -121,27 +121,5 @@ header p {
 
   .input-section button:active {
     transform: scale(0.98);
-  }
-
-  .hourly-forecast {
-    display: flex;
-    justify-content: space-around;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-  
-  .hour-block {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.5rem;
-    border-radius: 8px;
-    text-align: center;
-    color: #fff;
-    width: 60px;
-  }
-  
-  .hour-block img {
-    width: 40px;
-    height: 40px;
-  }
-  
+  }  
 }
